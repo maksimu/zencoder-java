@@ -16,20 +16,18 @@
 
 package de.bitzeche.video.transcoding.zencoder.job;
 
-import java.util.ArrayList;
-import java.util.List;
+import de.bitzeche.video.transcoding.zencoder.enums.ZencoderThumbnailFormat;
+import de.bitzeche.video.transcoding.zencoder.util.XmlUtility;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import de.bitzeche.video.transcoding.zencoder.enums.ZencoderThumbnailFormat;
-import de.bitzeche.video.transcoding.zencoder.util.XmlUtility;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ZencoderThumbnail {
 
@@ -40,6 +38,7 @@ public class ZencoderThumbnail {
 	private String baseUrl;
 	private String prefix;
 	private ZencoderThumbnailFormat format;
+    private String filename;
 
 	/*
 	 * S3
@@ -54,6 +53,11 @@ public class ZencoderThumbnail {
 		}
 		Element root = document.createElement("thumbnails");
 
+        if(this.filename != null){
+            Node filenameNode = document.createElement("filename");
+            filenameNode.setTextContent(this.filename.toLowerCase());
+            root.appendChild(filenameNode);
+        }
 		if (this.number != 0) {
 			Node numberNode = document.createElement("number");
 			numberNode.setTextContent("" + this.number);
@@ -179,6 +183,14 @@ public class ZencoderThumbnail {
 	public void addAcl(ZencoderS3AccessControlItem item) {
 		this.aclItems.add(item);
 	}
+
+    public String getFilename(){
+        return filename;
+    }
+
+    public void setFilename(String filename){
+        this.filename = filename;
+    }
 
 	public void deleteAcl(ZencoderS3AccessControlItem item) {
 		this.aclItems.remove(item);
