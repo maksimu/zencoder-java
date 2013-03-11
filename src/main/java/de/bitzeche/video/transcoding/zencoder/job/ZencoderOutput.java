@@ -16,26 +16,20 @@
 
 package de.bitzeche.video.transcoding.zencoder.job;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import de.bitzeche.video.transcoding.zencoder.enums.*;
+import de.bitzeche.video.transcoding.zencoder.util.XmlUtility;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import de.bitzeche.video.transcoding.zencoder.enums.ZencoderAspectMode;
-import de.bitzeche.video.transcoding.zencoder.enums.ZencoderAudioCodec;
-import de.bitzeche.video.transcoding.zencoder.enums.ZencoderDeinterlace;
-import de.bitzeche.video.transcoding.zencoder.enums.ZencoderDenoiseFilter;
-import de.bitzeche.video.transcoding.zencoder.enums.ZencoderVideoCodec;
-import de.bitzeche.video.transcoding.zencoder.util.XmlUtility;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ZencoderOutput {
 
@@ -59,7 +53,7 @@ public class ZencoderOutput {
 	/*
 	 * Video
 	 */
-	private ZencoderVideoCodec videoCodec = ZencoderVideoCodec.h264;
+	private ZencoderVideoCodec videoCodec;
 	private int width;
 	private int height;
 	private String size;
@@ -128,7 +122,8 @@ public class ZencoderOutput {
 		createAndAppendElement("clip_length", this.clipLength, root);
 		createAndAppendElement("public", this.isPublic, root);
 
-		createAndAppendElement("video_codec", this.videoCodec.name(), root);
+        if(videoCodec != null)
+		    createAndAppendElement("video_codec", this.videoCodec.name(), root);
 		createAndAppendElement("width", this.width, root);
 		createAndAppendElement("height", this.height, root);
 		createAndAppendElement("size", this.size, root);
@@ -455,18 +450,18 @@ public class ZencoderOutput {
 	}
 
 	public void setAudioCodec(ZencoderAudioCodec codec) {
-		if ((videoCodec.equals(ZencoderVideoCodec.h264) || videoCodec
-				.equals(ZencoderVideoCodec.vp6))
-				&& !(codec.equals(ZencoderAudioCodec.mp3) || codec
-						.equals(ZencoderAudioCodec.aac))) {
-			throw new IllegalArgumentException(
-					"H264 and VP6 only support MP3 or AAC");
-		} else if ((videoCodec.equals(ZencoderVideoCodec.theora) || videoCodec
-				.equals(ZencoderVideoCodec.vp8))
-				&& !codec.equals(ZencoderAudioCodec.vorbis)) {
-			throw new IllegalArgumentException(
-					"H264 and VP8 only support MP3 or AAC");
-		}
+//		if ((videoCodec.equals(ZencoderVideoCodec.h264) || videoCodec
+//				.equals(ZencoderVideoCodec.vp6))
+//				&& !(codec.equals(ZencoderAudioCodec.mp3) || codec
+//						.equals(ZencoderAudioCodec.aac))) {
+//			throw new IllegalArgumentException(
+//					"H264 and VP6 only support MP3 or AAC");
+//		} else if ((videoCodec.equals(ZencoderVideoCodec.theora) || videoCodec
+//				.equals(ZencoderVideoCodec.vp8))
+//				&& !codec.equals(ZencoderAudioCodec.vorbis)) {
+//			throw new IllegalArgumentException(
+//					"H264 and VP8 only support MP3 or AAC");
+//		}
 		this.audioCodec = codec;
 	}
 
@@ -604,12 +599,12 @@ public class ZencoderOutput {
 	public void deleteAcl(ZencoderS3AccessControlItem item) {
 		this.aclItems.remove(item);
 	}
-	
+
 	/**
-	 * Add a header for S3 outputs.  See Amazon documentation for options: 
+	 * Add a header for S3 outputs.  See Amazon documentation for options:
 	 * http://docs.amazonwebservices.com/AmazonS3/latest/API/RESTObjectPUT.html?r=7050
 	 * These values are ignored for non-S3 outputs.
-	 * 
+	 *
 	 * @param name Header name
 	 * @param value Header value
 	 */
