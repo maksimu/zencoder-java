@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.bitzeche.video.transcoding</groupId>
 	<artifactId>zencoder-api</artifactId>
-	<version>0.9.3-SNAPSHOT	</version>
+	<version>0.9.3c</version>
 	<packaging>jar</packaging>
 	<name>Java Client for Zencoder API</name>
 	<inceptionYear>2011</inceptionYear>
@@ -156,6 +156,21 @@
 					</execution>
 				</executions>
 			</plugin>
+
+            <!-- GENERATE SOURCE -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
 		</plugins>
 		<extensions>
 			<extension>
